@@ -10,6 +10,7 @@ Rottenpotatoes::Application.routes.draw do
   #   match 'products/:id/purchase' => 'catalog#purchase', :as => :purchase
   # This route can be invoked with purchase_url(:id => product.id)
 
+  match 'movies/ratings' => 'movies#ratings'
   match 'movies/title' => 'movies#titleasc'
   match 'movies/title=desc' => 'movies#titledesc'
   match 'movies/release' => 'movies#releaseasc'

@@ -10,7 +10,7 @@
   - flash.each do |key, value|
     %dt= key
     %dd= value
-= form_tag movies_path, :method => :get do
+= form_tag movies_path + "/ratings", :method => :delete do
   Include:
   - @all_ratings.each do |rating|
     = rating

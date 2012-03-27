@@ -20,24 +20,17 @@ class MoviesController < ApplicationController
     end
   end
 
-  def titleasc_old
-    @all_ratings = Movie.all_ratings
+  def ratings
     session[:sortby]="title ASC"
-    session[:ratings]=params[:ratings]
-    if params[:ratings]
-      @movies = Movie.order(session[:sortby]).find(:all, :conditions => ["rating IN (?)", params[:ratings].keys])
-      @checked_ratings = params[:ratings]
-    else
-      @movies = Movie.order(session[:sortby]).find(:all)
-      @checked_ratings = Array.new
+    if params[:commit]
+      session[:ratings]=params[:ratings]
     end
-    @highlight="title"
-    render "index"
+    redirect_to movies_path
   end
 
   def titleasc
     session[:sortby]="title ASC"
-    if params[:ratings]
+    if params[:commit]
       session[:ratings]=params[:ratings]
     end
     @highlight="title"
@@ -46,7 +39,7 @@ class MoviesController < ApplicationController
 
   def titledesc
     session[:sortby]="title DESC"
-    if params[:ratings]
+    if params[:commit]
       session[:ratings]=params[:ratings]
     end
     @highlight="title"
