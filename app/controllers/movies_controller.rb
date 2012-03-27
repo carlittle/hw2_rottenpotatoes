@@ -34,10 +34,26 @@ class MoviesController < ApplicationController
   end
 
   def ratings
-    if params[:commit]
-      session[:ratings]=params[:ratings]
+    if params[:sortby]
+      session[:sortby]=params[:sortby]
     end
-    redirect_to movies_path
+
+    if params[:ratings]
+      session[:ratings] = params[:ratings]
+    end
+
+    newparams = ""
+    if session[:sortby]
+      newparams += "sortby=#{session[:sortby]}"
+    end
+    session[:ratings].each do |key, value|
+      if newparams.length == 0
+        newparams += "#{key}=#{value}"
+      else
+        newparams += "&#{key}=#{value}"
+      end
+    end
+    redirect_to movies_path("", :ratings => session[:ratings], :sortby => session[:sortby])
   end
 
   def sortby
@@ -80,9 +96,7 @@ class MoviesController < ApplicationController
   end
 
   def titleasc
-    if params[:sortby]
-      session[:sortby]=params[:sortby]
-    end
+    session[:sortby]='title'
 
     if params[:ratings]
       session[:ratings] = params[:ratings]
@@ -140,19 +154,24 @@ class MoviesController < ApplicationController
   end
 
   def release_dateasc
-    session[:sortby]="release_date"
-    @all_ratings = Movie.all_ratings
-    if params[:commit]
-      session[:ratings]=params[:ratings]
+    session[:sortby]='release_date'
+
+    if params[:ratings]
+      session[:ratings] = params[:ratings]
     end
-    if session[:ratings]
-      @movies = Movie.order(session[:sortby]).find(:all, :conditions => ["rating IN (?)", session[:ratings].keys])
-      @checked_ratings = params[:ratings]
-    else
-      @movies = Movie.order(session[:sortby]).find(:all)
-      @checked_ratings = Array.new
+
+    newparams = ""
+    if session[:sortby]
+      newparams += "sortby=#{session[:sortby]}"
     end
-    render "index"
+    session[:ratings].each do |key, value|
+      if newparams.length == 0
+        newparams += "#{key}=#{value}"
+      else
+        newparams += "&#{key}=#{value}"
+      end
+    end
+    redirect_to movies_path("", :ratings => session[:ratings], :sortby => session[:sortby])
   end
 
   def releasedesc
