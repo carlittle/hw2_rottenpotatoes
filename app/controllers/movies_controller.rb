@@ -50,7 +50,7 @@ class MoviesController < ApplicationController
     else
       session[:sortby]=nil
     end
-    redirect_to movies_path
+      redirect_to movies_path + "/#{session[:sortby]}"
   end
 
   def sort_by_title
@@ -63,7 +63,7 @@ class MoviesController < ApplicationController
       session[:ratings]=params[:ratings]
     end
     @highlight="title"
-    redirect_to movies_path + "/sortby=title"
+    redirect_to movies_path + "/title"
   end
 
   def sort_by_release
@@ -80,14 +80,6 @@ class MoviesController < ApplicationController
   end
 
   def titleasc
-    if session[:sortby]=="title ASC"
-      session[:sortby]="title DESC"
-    else
-      session[:sortby]="title ASC"
-    end
-    if params[:commit]
-      session[:ratings]=params[:ratings]
-    end
     @highlight="title"
     redirect_to movies_path
   end
