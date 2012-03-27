@@ -21,15 +21,44 @@ class MoviesController < ApplicationController
   end
 
   def ratings
-    session[:sortby]="title ASC"
     if params[:commit]
       session[:ratings]=params[:ratings]
     end
     redirect_to movies_path
   end
 
+  def title
+    if session[:sortby]=="title ASC"
+      session[:sortby]="title DESC"
+    else
+      session[:sortby]="title ASC"
+    end
+    if params[:commit]
+      session[:ratings]=params[:ratings]
+    end
+    @highlight="title"
+    redirect_to movies_path
+  end
+
+  def release
+    if session[:sortby]=="release_date ASC"
+      session[:sortby]="release_date DESC"
+    else
+      session[:sortby]="release_date ASC"
+    end
+    if params[:commit]
+      session[:ratings]=params[:ratings]
+    end
+    @highlight="release"
+    redirect_to movies_path
+  end
+
   def titleasc
-    session[:sortby]="title ASC"
+    if session[:sortby]=="title ASC"
+      session[:sortby]="title DESC"
+    else
+      session[:sortby]="title ASC"
+    end
     if params[:commit]
       session[:ratings]=params[:ratings]
     end
