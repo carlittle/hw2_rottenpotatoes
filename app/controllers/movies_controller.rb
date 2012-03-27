@@ -8,14 +8,10 @@ class MoviesController < ApplicationController
 
   def index
     if params[:sortby]
-      if params[:sortby][/^title/]=="title" && session[:sortby]=="title ASC"
-        session[:sortby]="title DESC"
-      elsif params[:sortby][/^title/]=="title" && session[:sortby]=="title DESC"
+      if params[:sortby][/^title/]=="title"
         session[:sortby]="title ASC"
-      elsif params[:sortby][/^release_date/]=="release_date" && session[:sortby]=="release_date DESC"
+      elsif params[:sortby][/^release_date/]=="release_date"
         session[:sortby]="release_date ASC"
-      elsif params[:sortby][/^release_date/]=="release_date" && session[:sortby]=="release_date ASC"
-        session[:sortby]="release_date DESC"
       elsif params[:sortby][/^title/]=="title" && (!session[:sortby]==nil || session[:sortby][/^title/] != "title")
         session[:sortby]="title ASC"
       elsif params[:sortby][/^release_date/]=="release_date" && (!session[:sortby]==nil || session[:sortby][/^release_date/] != "release_date")
@@ -44,6 +40,19 @@ class MoviesController < ApplicationController
     redirect_to movies_path
   end
 
+  def sortby
+    if params[:sortby]=="title"
+      session[:sortby]="title"
+      @highlight="title"
+    elsif params[:sortby]=="release_date"
+      session[:sortby]="release_date"
+      @highlight="release"
+    else
+      session[:sortby]=nil
+    end
+    redirect_to movies_path
+  end
+
   def sort_by_title
     if session[:sortby]=="title ASC"
       session[:sortby]="title DESC"
@@ -54,10 +63,10 @@ class MoviesController < ApplicationController
       session[:ratings]=params[:ratings]
     end
     @highlight="title"
-    redirect_to movies_path + "?sortby=title"
+    redirect_to movies_path + "/sortby=title"
   end
 
-  def release
+  def sort_by_release
     if session[:sortby]=="release_date ASC"
       session[:sortby]="release_date DESC"
     else
@@ -67,7 +76,7 @@ class MoviesController < ApplicationController
       session[:ratings]=params[:ratings]
     end
     @highlight="release"
-    redirect_to "/movies?sortby=release_date"
+    redirect_to movies_path + "/sort"
   end
 
   def titleasc
