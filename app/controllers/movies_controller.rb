@@ -7,6 +7,21 @@ class MoviesController < ApplicationController
   end
 
   def index
+    if params[:sortby][/^title/]=="title" && session[:sortby]=="title ASC"
+      session[:sortby]="title DESC"
+    elsif params[:sortby][/^title/]=="title" && session[:sortby]=="title DESC"
+      session[:sortby]="title ASC"
+    elsif params[:sortby][/^release_date/]=="release_date" && session[:sortby]=="release_date DESC"
+      session[:sortby]="release_date ASC"
+    elsif params[:sortby][/^release_date/]=="release_date" && session[:sortby]=="release_date ASC"
+      session[:sortby]="release_date DESC"
+    elsif params[:sortby][/^title/]=="title" && (!session[:sortby]==nil || session[:sortby][/^title/] != "title")
+      session[:sortby]="title ASC"
+    elsif params[:sortby][/^release_date/]=="release_date" && (!session[:sortby]==nil || session[:sortby][/^release_date/] != "release_date")
+      session[:sortby]="release_date ASC"
+    else
+      session[:sortby] = nil
+    end
     @all_ratings = Movie.all_ratings
     if params[:commit]
       session[:ratings]=params[:ratings]
@@ -27,7 +42,7 @@ class MoviesController < ApplicationController
     redirect_to movies_path
   end
 
-  def title
+  def sort_by_title
     if session[:sortby]=="title ASC"
       session[:sortby]="title DESC"
     else
@@ -37,7 +52,7 @@ class MoviesController < ApplicationController
       session[:ratings]=params[:ratings]
     end
     @highlight="title"
-    redirect_to movies_path
+    redirect_to movies_path + "?sortby=title"
   end
 
   def release
@@ -50,7 +65,7 @@ class MoviesController < ApplicationController
       session[:ratings]=params[:ratings]
     end
     @highlight="release"
-    redirect_to movies_path
+    redirect_to "/movies?sortby=release_date"
   end
 
   def titleasc
@@ -67,18 +82,37 @@ class MoviesController < ApplicationController
   end
 
   def titledesc
+    @all_ratings = Movie.all_ratings
     session[:sortby]="title DESC"
+    if params[:commit]
+      session[:ratings]=params[:ratings]
+    end
+    if params[:commit]
+      session[:ratings]=params[:ratings]
+    end
+    if session[:ratings]
+      @movies = Movie.order(session[:sortby]).find(:all, :conditions => ["rating IN (?)", session[:ratings].keys])
+      @checked_ratings = params[:ratings]
+    else
+      @movies = Movie.order(session[:sortby]).find(:all)
+      @checked_ratings = Array.new
+    end
+    @movies = Movie.order(session[:sortby])
+    @highlight="title"
+    render "index"
+  end
+
+  def releaseasc
+    if session[:sortby]=="release_date ASC"
+      session[:sortby]="release_date DESC"
+    else
+      session[:sortby]="release_date ASC"
+    end
     if params[:commit]
       session[:ratings]=params[:ratings]
     end
     @highlight="title"
     redirect_to movies_path
-  end
-
-  def releaseasc
-    @movies = Movie.order("release_date ASC")
-    @highlight="release"
-    render "index"
   end
 
   def releasedesc

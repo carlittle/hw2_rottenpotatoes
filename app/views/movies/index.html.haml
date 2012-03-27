@@ -2,6 +2,11 @@
 %h1 All Movies
 %p
 %dl
+  - params.each do |key, value|
+    %dt= key
+    %dd= value
+%p
+%dl
   - session.each do |key, value|
     %dt= key
     %dd= value
@@ -24,14 +29,14 @@
   %thead
     %tr
       - if(session[:sortby] && session[:sortby][/^title/] == "title")
-        %th{:class => "hilite"}= link_to "Movie Title", movies_path + "/title", :id => "title_header"
+        %th{:class => "hilite"}= link_to "Movie Title", movies_path + "?sortby=title", :id => "title_header"
       - else
-        %th{:class => ""}= link_to "Movie Title", movies_path + "/title", :id => "title_header"
+        %th{:class => ""}= link_to "Movie Title", movies_path + "?sortby=title", :id => "title_header"
       %th Rating
       - if(session[:sortby] && session[:sortby][/^release_date/] == "release_date")
-        %th{:class => "hilite"}= link_to "Release Date", movies_path + "/release", :id => "release_date_header"
+        %th{:class => "hilite"}= link_to "Release Date", movies_path + "?sortby=release_date", :id => "release_date_header"
       - else
-        %th{:class => ""}= link_to "Release Date", movies_path + "/release", :id => "release_date_header"
+        %th{:class => ""}= link_to "Release Date", movies_path + "?sortby=release_date", :id => "release_date_header"
       %th More Info
   %tbody
     - @movies.each do |movie|
