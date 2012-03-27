@@ -80,6 +80,29 @@ class MoviesController < ApplicationController
   end
 
   def titleasc
+    if params[:sortby]
+      session[:sortby]=params[:sortby]
+    end
+
+    if params[:ratings]
+      session[:ratings] = params[:ratings]
+    end
+
+    newparams = ""
+    if session[:sortby]
+      newparams += "sortby=#{session[:sortby]}"
+    end
+    session[:ratings].each do |key, value|
+      if newparams.length == 0
+        newparams += "#{key}=#{value}"
+      else
+        newparams += "&#{key}=#{value}"
+      end
+    end
+    redirect_to movies_path("", :ratings => session[:ratings], :sortby => session[:sortby])
+  end
+
+  def title
     session[:sortby]="title"
     @all_ratings = Movie.all_ratings
     if params[:commit]
