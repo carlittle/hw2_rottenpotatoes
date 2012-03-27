@@ -12,21 +12,25 @@ class MoviesController < ApplicationController
 
   def titleasc
     @movies = Movie.order("title ASC")
+    @highlight="title"
     render "index"
   end
 
   def titledesc
     @movies = Movie.order("title DESC")
+    @highlight="title"
     render "index"
   end
 
   def releaseasc
     @movies = Movie.order("release_date ASC")
+    @highlight="release"
     render "index"
   end
 
   def releasedesc
     @movies = Movie.order("release_date DESC")
+    @highlight="release"
     render "index"
   end
 
