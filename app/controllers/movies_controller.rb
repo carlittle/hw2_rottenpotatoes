@@ -40,17 +40,21 @@ class MoviesController < ApplicationController
 
     if params[:ratings]
       session[:ratings] = params[:ratings]
+    else
+      session.delete(:ratings)
     end
 
     newparams = ""
     if session[:sortby]
       newparams += "sortby=#{session[:sortby]}"
     end
-    session[:ratings].each do |key, value|
-      if newparams.length == 0
-        newparams += "#{key}=#{value}"
-      else
-        newparams += "&#{key}=#{value}"
+    if session[:ratings]
+      session[:ratings].each do |key, value|
+        if newparams.length == 0
+          newparams += "#{key}=#{value}"
+        else
+          newparams += "&#{key}=#{value}"
+        end
       end
     end
     redirect_to movies_path("", :ratings => session[:ratings], :sortby => session[:sortby])
