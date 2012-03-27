@@ -1,5 +1,5 @@
 class Movie < ActiveRecord::Base
-  def self.ratings
+  def self.all_ratings
     #find all records, then map rating attributes to an array
     find(:all, :select => "DISTINCT(rating)").map(&:rating)
   end
