@@ -10,6 +10,26 @@ class MoviesController < ApplicationController
     @movies = Movie.all
   end
 
+  def titleasc
+    @movies = Movie.order("title ASC")
+    render "index"
+  end
+
+  def titledesc
+    @movies = Movie.order("title DESC")
+    render "index"
+  end
+
+  def releaseasc
+    @movies = Movie.order("release_date ASC")
+    render "index"
+  end
+
+  def releasedesc
+    @movies = Movie.order("release_date DESC")
+    render "index"
+  end
+
   def new
     # default: render 'new' template
   end
