@@ -11,8 +11,8 @@ Rottenpotatoes::Application.routes.draw do
   # This route can be invoked with purchase_url(:id => product.id)
 
   match 'movies/ratings' => 'movies#ratings'
-  match 'movies/sort=title' => 'movies#sort_by_title'
-  match 'movies/sort=release_date' => 'movies#sort_by_release'
+  match 'movies/sort=title' => 'movies#title'
+  match 'movies/sort=release_date' => 'movies#release'
   # Sample resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
   resources :movies

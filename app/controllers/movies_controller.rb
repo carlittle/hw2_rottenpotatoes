@@ -7,20 +7,22 @@ class MoviesController < ApplicationController
   end
 
   def index
-    if params[:sortby][/^title/]=="title" && session[:sortby]=="title ASC"
-      session[:sortby]="title DESC"
-    elsif params[:sortby][/^title/]=="title" && session[:sortby]=="title DESC"
-      session[:sortby]="title ASC"
-    elsif params[:sortby][/^release_date/]=="release_date" && session[:sortby]=="release_date DESC"
-      session[:sortby]="release_date ASC"
-    elsif params[:sortby][/^release_date/]=="release_date" && session[:sortby]=="release_date ASC"
-      session[:sortby]="release_date DESC"
-    elsif params[:sortby][/^title/]=="title" && (!session[:sortby]==nil || session[:sortby][/^title/] != "title")
-      session[:sortby]="title ASC"
-    elsif params[:sortby][/^release_date/]=="release_date" && (!session[:sortby]==nil || session[:sortby][/^release_date/] != "release_date")
-      session[:sortby]="release_date ASC"
-    else
-      session[:sortby] = nil
+    if params[:sortby]
+      if params[:sortby][/^title/]=="title" && session[:sortby]=="title ASC"
+        session[:sortby]="title DESC"
+      elsif params[:sortby][/^title/]=="title" && session[:sortby]=="title DESC"
+        session[:sortby]="title ASC"
+      elsif params[:sortby][/^release_date/]=="release_date" && session[:sortby]=="release_date DESC"
+        session[:sortby]="release_date ASC"
+      elsif params[:sortby][/^release_date/]=="release_date" && session[:sortby]=="release_date ASC"
+        session[:sortby]="release_date DESC"
+      elsif params[:sortby][/^title/]=="title" && (!session[:sortby]==nil || session[:sortby][/^title/] != "title")
+        session[:sortby]="title ASC"
+      elsif params[:sortby][/^release_date/]=="release_date" && (!session[:sortby]==nil || session[:sortby][/^release_date/] != "release_date")
+        session[:sortby]="release_date ASC"
+      else
+        session[:sortby] = nil
+      end
     end
     @all_ratings = Movie.all_ratings
     if params[:commit]
