@@ -1,19 +1,29 @@
 -#  This file is app/views/movies/index.html.haml
 %h1 All Movies
+%p
+%dl
+  - session.each do |key, value|
+    %dt= key
+    %dd= value
+%p
+%dl
+  - flash.each do |key, value|
+    %dt= key
+    %dd= value
 = form_tag movies_path, :method => :get do
   Include:
   - @all_ratings.each do |rating|
     = rating
-    - if !@checked_ratings.empty? && @checked_ratings.has_key?(rating)
+    - if session[:ratings] && session[:ratings].has_key?(rating)
       = check_box_tag "ratings[#{rating}]", 1, true
-    -else
+    - else
       = check_box_tag "ratings[#{rating}]", 1, false
   = submit_tag 'Refresh', :id => "ratings_submit"
 
 %table#movies
   %thead
     %tr
-      - if(@highlight == "title")
+      - if(session[:sortby] && session[:sortby] == "title")
         %th{:class => "hilite"}= link_to "Movie Title", movies_path + "/title", :id => "title_header"
       - else
         %th{:class => ""}= link_to "Movie Title", movies_path + "/title", :id => "title_header"

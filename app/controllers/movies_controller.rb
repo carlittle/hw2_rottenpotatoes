@@ -8,25 +8,49 @@ class MoviesController < ApplicationController
 
   def index
     @all_ratings = Movie.all_ratings
-    if params[:ratings]
-      @movies = Movie.find(:all, :conditions => ["rating IN (?)", params[:ratings].keys])
+    if params[:commit]
+      session[:ratings]=params[:ratings]
+    end
+    if session[:ratings]
+      @movies = Movie.order(session[:sortby]).find(:all, :conditions => ["rating IN (?)", session[:ratings].keys])
       @checked_ratings = params[:ratings]
     else
-      @movies = Movie.find(:all)
+      @movies = Movie.order(session[:sortby]).find(:all)
       @checked_ratings = Array.new
     end
   end
 
-  def titleasc
-    @movies = Movie.order("title ASC")
+  def titleasc_old
+    @all_ratings = Movie.all_ratings
+    session[:sortby]="title ASC"
+    session[:ratings]=params[:ratings]
+    if params[:ratings]
+      @movies = Movie.order(session[:sortby]).find(:all, :conditions => ["rating IN (?)", params[:ratings].keys])
+      @checked_ratings = params[:ratings]
+    else
+      @movies = Movie.order(session[:sortby]).find(:all)
+      @checked_ratings = Array.new
+    end
     @highlight="title"
     render "index"
   end
 
-  def titledesc
-    @movies = Movie.order("title DESC")
+  def titleasc
+    session[:sortby]="title ASC"
+    if params[:ratings]
+      session[:ratings]=params[:ratings]
+    end
     @highlight="title"
-    render "index"
+    redirect_to movies_path
+  end
+
+  def titledesc
+    session[:sortby]="title DESC"
+    if params[:ratings]
+      session[:ratings]=params[:ratings]
+    end
+    @highlight="title"
+    redirect_to movies_path
   end
 
   def releaseasc
