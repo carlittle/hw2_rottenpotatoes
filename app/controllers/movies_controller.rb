@@ -80,8 +80,19 @@ class MoviesController < ApplicationController
   end
 
   def titleasc
-    @highlight="title"
-    redirect_to movies_path
+    session[:sortby]="title"
+    @all_ratings = Movie.all_ratings
+    if params[:commit]
+      session[:ratings]=params[:ratings]
+    end
+    if session[:ratings]
+      @movies = Movie.order(session[:sortby]).find(:all, :conditions => ["rating IN (?)", session[:ratings].keys])
+      @checked_ratings = params[:ratings]
+    else
+      @movies = Movie.order(session[:sortby]).find(:all)
+      @checked_ratings = Array.new
+    end
+    render "index"
   end
 
   def titledesc
@@ -105,17 +116,20 @@ class MoviesController < ApplicationController
     render "index"
   end
 
-  def releaseasc
-    if session[:sortby]=="release_date ASC"
-      session[:sortby]="release_date DESC"
-    else
-      session[:sortby]="release_date ASC"
-    end
+  def release_dateasc
+    session[:sortby]="release_date"
+    @all_ratings = Movie.all_ratings
     if params[:commit]
       session[:ratings]=params[:ratings]
     end
-    @highlight="title"
-    redirect_to movies_path
+    if session[:ratings]
+      @movies = Movie.order(session[:sortby]).find(:all, :conditions => ["rating IN (?)", session[:ratings].keys])
+      @checked_ratings = params[:ratings]
+    else
+      @movies = Movie.order(session[:sortby]).find(:all)
+      @checked_ratings = Array.new
+    end
+    render "index"
   end
 
   def releasedesc
