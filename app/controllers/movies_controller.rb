@@ -9,13 +9,13 @@ class MoviesController < ApplicationController
   def index
     if params[:sortby]
       if params[:sortby][/^title/]=="title"
-        session[:sortby]="title ASC"
+        session[:sortby]="title"
       elsif params[:sortby][/^release_date/]=="release_date"
-        session[:sortby]="release_date ASC"
+        session[:sortby]="release_date"
       elsif params[:sortby][/^title/]=="title" && (!session[:sortby]==nil || session[:sortby][/^title/] != "title")
-        session[:sortby]="title ASC"
+        session[:sortby]="title"
       elsif params[:sortby][/^release_date/]=="release_date" && (!session[:sortby]==nil || session[:sortby][/^release_date/] != "release_date")
-        session[:sortby]="release_date ASC"
+        session[:sortby]="release_date"
       else
         session[:sortby] = nil
       end
@@ -41,23 +41,9 @@ class MoviesController < ApplicationController
     if params[:ratings]
       session[:ratings] = params[:ratings]
     else
-      session.delete(:ratings)
+      session[:ratings] = nil
     end
-
-    newparams = ""
-    if session[:sortby]
-      newparams += "sortby=#{session[:sortby]}"
-    end
-    if session[:ratings]
-      session[:ratings].each do |key, value|
-        if newparams.length == 0
-          newparams += "#{key}=#{value}"
-        else
-          newparams += "&#{key}=#{value}"
-        end
-      end
-    end
-    redirect_to movies_path("", :ratings => session[:ratings], :sortby => session[:sortby])
+    redirect_to movies_path(:ratings => session[:ratings], :sortby => session[:sortby])
   end
 
   def sortby
@@ -110,14 +96,16 @@ class MoviesController < ApplicationController
     if session[:sortby]
       newparams += "sortby=#{session[:sortby]}"
     end
-    session[:ratings].each do |key, value|
-      if newparams.length == 0
-        newparams += "#{key}=#{value}"
-      else
-        newparams += "&#{key}=#{value}"
+    if session[:ratings]
+      session[:ratings].each do |key, value|
+       if newparams.length == 0
+         newparams += "#{key}=#{value}"
+       else
+         newparams += "&#{key}=#{value}"
+       end
       end
     end
-    redirect_to movies_path("", :ratings => session[:ratings], :sortby => session[:sortby])
+    redirect_to movies_path(:ratings => session[:ratings], :sortby => session[:sortby])
   end
 
   def title
@@ -164,18 +152,7 @@ class MoviesController < ApplicationController
       session[:ratings] = params[:ratings]
     end
 
-    newparams = ""
-    if session[:sortby]
-      newparams += "sortby=#{session[:sortby]}"
-    end
-    session[:ratings].each do |key, value|
-      if newparams.length == 0
-        newparams += "#{key}=#{value}"
-      else
-        newparams += "&#{key}=#{value}"
-      end
-    end
-    redirect_to movies_path("", :ratings => session[:ratings], :sortby => session[:sortby])
+    redirect_to movies_path(:ratings => session[:ratings], :sortby => session[:sortby])
   end
 
   def releasedesc
