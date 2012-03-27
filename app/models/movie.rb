@@ -4,10 +4,10 @@ class Movie < ActiveRecord::Base
     find(:all, :select => "DISTINCT(rating)").map(&:rating)
   end
   def self.find_with_ratings(ratings)
-    if defined? ratings == nil 
+    if defined? ratings == nil
       find(:all)
     elsif ratings.length == 0
-      find(:all, :select => "where rating='G'")
+      find(:all, :conditions => ["rating = ?", ratings])
     else
       find(:all)
     end

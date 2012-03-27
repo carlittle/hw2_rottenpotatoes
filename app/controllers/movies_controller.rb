@@ -7,13 +7,17 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @checked_ratings = params[:ratings]
     @all_ratings = Movie.all_ratings
-    @movies = Movie.find_with_ratings(params[:ratings])
+    if params[:ratings]
+      @movies = Movie.find(:all, :conditions => ["rating IN (?)", params[:ratings].keys])
+      @checked_ratings = params[:ratings]
+    else
+      @movies = Movie.find(:all)
+      @checked_ratings = Array.new
+    end
   end
 
   def titleasc
-    @movies = Movie.where("rating = ?", params[:ratings])
     @movies = Movie.order("title ASC")
     @highlight="title"
     render "index"
